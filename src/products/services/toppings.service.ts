@@ -13,7 +13,7 @@ export class ToppingsService {
 
   getToppings(): Observable<Topping[]> {
     return this.http
-      .get<Topping[]>(`/api/toppings`)
+      .get<Topping[]>(`http://localhost:3000/toppings`)
       .pipe(catchError((error: any) => Observable.throw(error.json())));
   }
 }

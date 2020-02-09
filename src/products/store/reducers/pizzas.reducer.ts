@@ -2,43 +2,53 @@ import * as fromPizzas from '../actions';
 import {Pizza} from "../../models/pizza.model";
 
 export interface PizzaState {
-    data: Pizza[],
-    loaded: boolean,
-    loading: boolean
+    entities: { [id: number]: Pizza };
+    loaded: boolean;
+    loading: boolean;
 }
 
 export const initialState: PizzaState = {
-   data: [],
-   loaded: false,
+    entities: {},
+    loaded: false,
     loading: false
 };
 
 export function reducer(
     state = initialState,
     action: fromPizzas.PizzasActions
-):PizzaState {
+): PizzaState {
 
     switch ((action.type)) {
-        case fromPizzas.LOAD_PIZZAS :{
+        case fromPizzas.LOAD_PIZZAS : {
             return {
                 ...state,
                 loading: true
             }
         }
-        case fromPizzas.LOAD_PIZZAS_FAIL :{
+        case fromPizzas.LOAD_PIZZAS_FAIL : {
             return {
                 ...state,
                 loading: false,
                 loaded: false
             }
         }
-        case fromPizzas.LOAD_PIZZAS_SUCCESS :{
-            const data = action.payload;
+        case fromPizzas.LOAD_PIZZAS_SUCCESS : {
+            const pizzas = action.payload;
+            const entities = pizzas.reduce(
+                (entities: { [id: number]: Pizza }, pizza: Pizza) => {
+                    return {
+                        ...entities,
+                        [pizza.id]: pizza
+                    }
+                },
+                {
+                    ...state.entities,
+                });
             return {
                 ...state,
                 loading: false,
                 loaded: true,
-                data
+                entities
             }
         }
     }
@@ -47,4 +57,4 @@ export function reducer(
 
 export const getPizzasLoading = (state: PizzaState) => state.loading;
 export const getPizzasLoaded = (state: PizzaState) => state.loaded;
-export const getPizzas = (state: PizzaState) => state.data;
+export const getPizzasEntities = (state: PizzaState) => state.entities;

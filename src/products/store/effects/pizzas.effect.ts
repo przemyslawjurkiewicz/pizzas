@@ -17,9 +17,10 @@ export class PizzasEffect {
     loaPizzas$ = this.actions$.pipe(
         ofType(pizzasActions.LOAD_PIZZAS),
         switchMap(() => {
-            return this.pizzasService.getPizzas().pipe(
-                map(
-                    pizzas => new pizzasActions.LoadPizzasSuccess(pizzas),
+            return this.pizzasService
+                .getPizzas()
+                .pipe(
+                map(pizzas => new pizzasActions.LoadPizzasSuccess(pizzas),
                     catchError(err => of (new pizzasActions.LoadPizzasFail(err)))
                 )
             )
